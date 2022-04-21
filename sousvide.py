@@ -54,20 +54,20 @@ setTemperature = b'0'
 
 
 
-def subscribeCallBack(topic, msg):
+def subscribeCallBack(topic, message):
   global heaterFlag
   global temperature
   global setTemperature
   if topic == b'heater':
-    if msg == b'0':
+    if message == b'0':
       heaterFlag = 0
-    if msg == b'1':
+    if message == b'1':
       heaterFlag = 1
   if topic == b'sensors/environmental/new/temperature,humidity':
     measurement = msg.split(b'/')
     temperature = measurement[0]
   if topic == b'tempset':
-    setTemperature = msg
+    setTemperature = message
 
 
 
@@ -76,7 +76,7 @@ def subscribeCallBack(topic, msg):
 
 try:
  client = MQTTClient("123456",mqttServer, port=1883, user= mqttUsername, password= mqttPassword)
- client.set_callback(sub_cb)
+ client.set_callback(subscribeCallBack)
  client.connect()
  client.subscribe(mqttTopic1)
  client.subscribe(mqttTopic2)
